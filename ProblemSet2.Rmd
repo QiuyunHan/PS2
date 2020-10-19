@@ -1,15 +1,15 @@
 ---
 title: "Title of Your Report"
-author: "Wing Yi Ma, Qiuyun Han, Tong Wu, Minghui Yu"
+author: "Wing Yi Ma, Qiuyun Han, Tong Wu, Minhui Yu"
 date: "October 19th 2020"
 output:
-  pdf_document: default
-  bookdown::pdf_document: default
+  pdf_document:
+    latex_engine: xelatex
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-#install.packages("rsq") #uncomment this if you have not installed it
+# install.packages("rsq") #uncomment this if you have not installed it
 library(ggplot2)
 library(dplyr)
 library(rsq)
@@ -51,35 +51,42 @@ Code and data support this report is available at https://github.com/QiuyunHan/P
 ## Model
 
 We used a multivariate linear regression model to measure the correlation between the total children of respondents and their age, size of household, marital status and degree of education. We use this model because we believe these variables would impact the number of children, and there is a linear relation between the variables.
-A multivariate linear regression model can predict the linear relation of more than one independent variable and the dependent variable. In our model, the total number of children is considered the response(dependent) variable, which is numeric. Other variables are used as independent variables, more specifically, the age and size of household are numerical variables. Marriage status and educational level are dummy variables, which means they are the categorical variables in the regression model.
+It can predict the linear relation of more than one independent variable and the dependent variable. In our model, the total number of children is considered the response(dependent) variable, which is numeric. Other variables are used as independent variables, more specifically, the age and size of household are numerical variables. Marriage status and educational level are dummy variables, which means they are the categorical variables in the regression model. We used R to run this model as learnt in the lectures.
 There are reasons why we choose these variables. Firstly, we choose age rather than age group because age is a continuous numerical variable, it is more accurate than the age group. Same reason for choosing the household size. Besides, we believe the degree of educational level and his marital status would affect his decision on being a parent, thus it would impact the total number of children in the household.
-We used R to run this model as learnt in the lectures. Since this model was built based on a survey data and they have used stratified sampling during the survey, we used survey package and the stratified method to build the mode. However,  this survey has used different province as the stratum, we considered every province have the same weight in our model, and we were build this without the finite population correction.
-For the alternative model, we believe logistic regression model is also appropriate, but we need to turn the response variable as binary, for example if the respondent has more than 5 children or not, and we can use the same expasionary variable to predict the result.
-
-
-
-
 
 
 By using the linear model, we have predicted a formula.
 
 ### (1) Formula of Our Model:
-total_children = ${\beta_0}$ + ${\beta_1}$age + ${\beta_2}$hh_size + ${\beta_3}$College, CEGEP or other non-university certificate or di... + ${\beta_4}$High school diploma or a high school equivalency certificate + ${\beta_5}$Less than high school diploma or its equivalent + ${\beta_6}$Trade certificate or diploma + ${\beta_7}$University certificate or diploma below the bachelor's level + ${\beta_8}$University certificate, diploma or degree above the bach... + ${\beta_9}$Living common-law + ${\beta_10}$Married + ${\beta_11}$Separated + ${\beta_12}$Single, never married + ${\beta_13}$Widowed
+
+Let ${x_1}$ = College, CEGEP or other non-university certificate or di... ,
+    ${x_2}$ = High school diploma or a high school equivalency certificate,
+    ${x_3}$ = Less than high school diploma or its equivalent;
+    ${x_4}$ = Trade certificate or diploma,
+    ${x_5}$ = University certificate or diploma below the bachelor's level,
+    ${x_6}$ = University certificate, diploma or degree above the bach... ;
+    ${x_a}$ = Living common-law,
+    ${x_b}$ = Married,
+    ${x_c}$ = Separated,
+    ${x_d}$ = Single, never married,
+    ${x_e}$ = Widowed.
+    
+    
+Then we have: 
+
+total_children = ${\beta_0}$ + ${\beta_1}$age + ${\beta_2}$hh_size + ${\beta_3}$${x_1}$+ ${\beta_4}$${x_2}$ + ${\beta_5}$${x_3}$+ ${\beta_6}$${x_4}$ + ${\beta_7}$${x_5}$+ ${\beta_8}$${x_6}$+ ${\beta_a}$${x_a}$+ ${\beta_b}$${x_b}$ + ${\beta_c}$${x_c}$ + ${\beta_d}$${x_d}$ + ${\beta_e}$${x_e}$
 
 
 
 ### (2) Interpretation of the Model:
 
 Total_children is our response variable, age,hh_size,education and marital status are expansionary variables.
-+ ${\beta_0}$ : This is the intercept for our model
-+ ${\beta_1}$ : This is the parameter for variable age
-+ ${\beta_2}$ : This is the parameter for variable household size
+
++ ${\beta_0}$ : This is the intercept for our model.
++ ${\beta_1}$ : This is the parameter for variable age.
++ ${\beta_2}$ : This is the parameter for variable household size.
 + ${\beta_3}$ to ${\beta_8}$: These are the parameter for variable education in different degrees.
-+ ${\beta_9}$ to ${\beta_13}$: These are the parameter for variable marital_status represents different status of marriage of repondents.
- 
- 
-
-
++ ${\beta_a}$ to ${\beta_e}$: These are the parameter for variable marital_status represents different status of marriage of respondents.
 
 
 ## Results
@@ -102,12 +109,7 @@ thebox <- ggplot(cleaned, aes(x= factor(total_children), y=age, fill=factor(tota
 thebox
 ```
 
-
-
 From the box plot of age of respondents by each number of children(Figure 1), we can observe the distribution of age in each number of children. We can see that respondents without kid has lowest age median, which is around 35 years old. And the respondents who has seven or more children are around 75 years old. There is one outlier, a respondent who has 6 kids is approximately 30 years old, while most resondents' age has the median of 73 years old with 6 children.
-
-
-
 
 
 ```{r}
@@ -182,9 +184,22 @@ Above is the summary table of the multivariate regression model on respondent's 
 ## Discussion
 
 ### (1) Formula of Our Model:
-total_children = ${\beta_0}$ + ${\beta_1}$age + ${\beta_2}$hh_size + ${\beta_3}$College, CEGEP or other non-university certificate or di... + ${\beta_4}$High school diploma or a high school equivalency certificate + ${\beta_5}$Less than high school diploma or its equivalent + ${\beta_6}$Trade certificate or diploma + ${\beta_7}$University certificate or diploma below the bachelor's level + ${\beta_8}$University certificate, diploma or degree above the bach... + ${\beta_9}$Living common-law + ${\beta_10}$Married + ${\beta_11}$Separated + ${\beta_12}$Single, never married + ${\beta_13}$Widowed
+Let ${x_1}$ = College, CEGEP or other non-university certificate or di... ,
+    ${x_2}$ = High school diploma or a high school equivalency certificate,
+    ${x_3}$ = Less than high school diploma or its equivalent;
+    ${x_4}$ = Trade certificate or diploma,
+    ${x_5}$ = University certificate or diploma below the bachelor's level,
+    ${x_6}$ = University certificate, diploma or degree above the bach... ;
+    ${x_a}$ = Living common-law,
+    ${x_b}$ = Married,
+    ${x_c}$ = Separated,
+    ${x_d}$ = Single, never married,
+    ${x_e}$ = Widowed.
+    
+    
+Then we have: 
 
-
+total_children = ${\beta_0}$ + ${\beta_1}$age + ${\beta_2}$hh_size + ${\beta_3}$${x_1}$+ ${\beta_4}$${x_2}$ + ${\beta_5}$${x_3}$+ ${\beta_6}$${x_4}$ + ${\beta_7}$${x_5}$+ ${\beta_8}$${x_6}$+ ${\beta_a}$${x_a}$+ ${\beta_b}$${x_b}$ + ${\beta_c}$${x_c}$ + ${\beta_d}$${x_d}$ + ${\beta_e}$${x_e}$
 
 + In this formula, age and hh_size are numerical variables and others are dummy variables. And the estimate value, the standard error, the t-value and the p-value of each variable are shown as the table above.
 
@@ -200,11 +215,11 @@ total_children = ${\beta_0}$ + ${\beta_1}$age + ${\beta_2}$hh_size + ${\beta_3}$
   * The baseline is "Bachelor's degree (e.g. B.A., B.Sc., LL.B.)".
   * Since ${\beta_3}$ = 0.168, then the meaning of ${\beta_3}$ is if the education type change from "Bachelor's degree (e.g. B.A., B.Sc., LL.B.)" to "College, CEGEP or other non-university certificate or di...", total_children will increase by 0.168 with other conditions remain unchanged. The explanation of ${\beta_4}$ ~ ${\beta_8}$ is the same.
   * Since ${\beta_4}$ - ${\beta_3}$ = 0.227 - 0.168 = 0.059, we can also say that if the education type change from "College, CEGEP or other non-university certificate or di..." to "High school diploma or a high school equivalency certificate", total_children will increase by 0.059 with other conditions remain unchanged. Same for ${\beta_3}$ ~ ${\beta_8}$
-+ ${\beta_9}$ ~ ${\beta_13}$: 
++ ${\beta_a}$ ~ ${\beta_e}$: 
   *These are all dummy variables for marital status.
   * The baseline is "Divorced".
-  * Since ${\beta_9}$ = -0.456, then the meaning of ${\beta_9}$ is if the marital status change from "Divorced" to "Living common-law", total_children will decrease by 0.456 with other conditions remain unchanged. The explanation of ${\beta_10}$ ~ ${\beta_13}$ is the same.
-  * Since ${\beta_10}$ - ${\beta_9}$ = -0.280 - (-0.456) = 0.176, we can also say that if the marital status change from "Living common-law" to "Married", total_children will increase by 0.176 with other conditions remain unchanged. Same for other combinations for ${\beta_9}$ ~ ${\beta_13}$.
+  * Since ${\beta_a}$ = -0.456, then the meaning of ${\beta_9}$ is if the marital status change from "Divorced" to "Living common-law", total_children will decrease by 0.456 with other conditions remain unchanged. The explanation of ${\beta_b}$ ~ ${\beta_e}$ is the same.
+  * Since ${\beta_b}$ - ${\beta_a}$ = -0.280 - (-0.456) = 0.176, we can also say that if the marital status change from "Living common-law" to "Married", total_children will increase by 0.176 with other conditions remain unchanged. Same for other combinations for ${\beta_a}$ ~ ${\beta_e}$.
 
 ### (3) Evaluation for Our Model:
 + ${R^2}$ = 0.396: We can say that 39.6% variation in total_children can be explained by our model.
@@ -212,16 +227,15 @@ total_children = ${\beta_0}$ + ${\beta_1}$age + ${\beta_2}$hh_size + ${\beta_3}$
 
 
 ### (4) Conclusion:
-Our conclusion is that the larger the age, the larger the hh_size, the lower the education level, and the better the marital status, the greater the total number of children in Canadian families.
-This model can be used for reference by people of different ages, for example, for young couples, they will have the expected number of children about them.  In other words, through our model, people can find a reference value for the number of total children.
-Combined with our plots, we can see that the proportion of people with a high education level will be 50%, and single, never married will account for 23%, which will result in fewer children in Canadian families. If things go on like this, fewer children will lead to more serious social problems such as population aging and a decline in labor, so the government can encourage people to have more children.
-
+Here is the table of education type:
 ```{r, echo = FALSE, message = FALSE}
 tran1 <- cleaned%>%
   group_by(`education`)%>%
   summarise(count = n())
 kable(tran1,col.names = c("Education","Count"),caption = "Table for Respondents' Education")
 ```
+
+Here is the pie chart of education type:
 
 ```{r, echo = FALSE}
 # Create a frame of data above.
@@ -255,8 +269,9 @@ pie
 
 ```
 
-
 From this pie chart we can observe that if it is based on whether or not to complete college, the proportion of people with high education and low education is basically 50%.
+
+Here is the table of marital status:
 
 ```{r, echo = FALSE, message = FALSE}
 tran_2<-cleaned%>%
@@ -264,6 +279,8 @@ tran_2<-cleaned%>%
   summarise(count = n())
 kable(tran_2,col.names = c("Marital Status", "Count"), caption = "Table for Respondents' Marital Status")
 ```
+
+Here is the pie chart of marital status:
 
 ```{r, echo = FALSE}
 # Create a frame of data above.
@@ -296,15 +313,17 @@ pie <- ggplot(df, aes(x = "", y = value, fill = group)) + ## Start with a bar ch
 pie
 ```
 
-
 From this pie chart we can conclude that married people accounted for the largest proportion, reaching 46%, followed by single, never married people, accounting for 23%, almost half of the number of married people.
 
+Our conclusion is that the larger the age, the larger the hh_size, the lower the education level, and the better the marital status, the greater the total number of children in Canadian families.
+This model can be used for reference by people of different ages, for example, for young couples, they will have the expected number of children about them.  In other words, through our model, people can find a reference value for the number of total children.
+Combined with our plots, we can see that the proportion of people with a high education level will be 50%, and single, never married will account for 23%, which will result in fewer children in Canadian families. If things go on like this, fewer children will lead to more serious social problems such as population aging and a decline in labor, so the government can encourage people to have more children.
 
 
 
 # Weaknesses
 
-Some limitations and drawbacks of the survey and the sampling method are as mentioned in the data section. As well, the sampled population includes people from different pronvinces in Canada. The various environments in Canada might also be a factor on parents’ decisions with the number of children they would like to have. Therefore, our model might not have included all factors that possibly influence the total number of children in families. Another weakness of our model would be that linear regression models are sensitive to outliers, as we can see from the plots of each predictor variable versus total_children, the existence of outliers was obvious. This could have lowered the accuracy of our results. Finally, we did not use fpc in our model, which might have caused the standard errors of the estimates to be too big. 
+Some limitations and drawbacks of the survey and the sampling method are as mentioned in the data section. As well, the sampled population includes people from different cities in Canada. The various environments in Canada might also be a factor on parents’ decisions with the number of children they would like to have. Therefore, our model might not have included all factors that possibly influence the total number of children in families. Another weakness of our model would be that linear regression models are sensitive to outliers, as we can see from the plots of each predictor variable versus total_children, the existence of outliers was obvious. This could have lowered the accuracy of our results. Finally, we did not use fpc in our model, which might have caused the standard errors of the estimates to be too big. 
 
 # Next Steps
 
@@ -314,16 +333,16 @@ Our model is a stratified sampling without finite population correction. So we c
 ## References
 
 
-### Dataset (MLA)
+### 1. Dataset (MLA)
 
  Beaupre, Pascale. *General Social Survey Cycle 31: Families*, *2020*.
   Statistics Canada Minister of Industry [distributor]. Web. April 2020. 
 
-### Software
+### 2. Software
  RStudio Team (2020). RStudio: Integrated Development for R. RStudio, PBC,
   Boston, MA URL http://www.rstudio.com/.
 
-### Packages
+### P3. ackages
  Dabao Zhang (2020). rsq: R-Squared and Related Measures. R package version 2.0. https://CRAN.R-project.org/package=rsq
  
  Hadley Wickham, Romain François, Lionel Henry and Kirill Müller (2020). dplyr: A Grammar of Data Manipulation. R package version 1.0.2.
@@ -339,9 +358,7 @@ Our model is a stratified sampling without finite population correction. So we c
 Yihui Xie (2020). knitr: A General-Purpose Package for Dynamic Report Generation in R. R package version 1.29.
 
 
-### Websites
+### 4. Websites
  Yihui Xie, Christophe Dervieux. “R Markdown Cookbook.” 10.1 The Function Knitr::Kable(), 21 Sept. 2020, bookdown.org/yihui/rmarkdown-cookbook/kable.html. 
  
  Telling Stories With Data, 17 May 2020, tellingstorieswithdata.com/. 
-
-
