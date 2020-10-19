@@ -1,0 +1,94 @@
+---
+title: "Title of Your Report"
+author: "Wing Yi Ma,"
+date: "October 19th 2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Title of your Report
+
+# Name(s) of Author(s) 
+Wing Yi Ma, 
+
+# Date
+October 19th 2020
+
+## Abstract
+
+The falling population is a common phenomenon in the developed countries, and it brings a series of social problems on aspects such as labour force and aging of population. We extract data from the 2017 General Social Survey on Family, a sample survey with cross-sectional design which collects a large amount of data from each selected respondent. To investigate the factors that affect the decreasing population, we construct a multivariate regression model on the respondent's total number of children. And we have evidence to conclude that respondent’s age and household size are positively correlated to total number of children, respondents with high education level and respondents with single status tend to have fewer number of children.
+
+
+## Introduction
+
+The goal of this report is to find how the factors will relate to the total number of children in Canadian households. We first get the GSS survey data of Canadian Family in 2017, then we made a clean of the data and the raw data after cleaning is called “gss”. We have made this clean because we want to remove the insignificant, invalid observations or variables that are not useful to our report, also we rename every variable in the new data so we can visualize the dataset. In the report, we made analysis on some variables that we believe important to see how they correlated with the total number of children in families, such as the age of respondent, the household size of the respondent, and we also investigate their marriage status and educational level. We have used a multivariate regression method to measure the relations, in our model, total children number is the response variable and the age, household size, marriage status and educational level are our expansionary variables. 
+
+## Data
+
+The data set used in this report is the 2017 General Social Survey (GSS) on Family. The data was collected through telephone calls from February 2nd to November 30th 2017, with telephone numbers provided by Statistics Canada's Address Register, which is the sampling frame of this survey.The population of the survey is the entire Canadian population. Its target population was the non-institutionalized persons who were 15 years of age and older and lived in the 10 provinces of Canada, excluding residents of the Yukon, Northwest Territories, and Nunavut, and the full-time residents of institutions. The frame population was the owners of the telephone numbers that were called, and the sampled population was the ones who answered the survey question through the calls. The sampling method used was stratified random sampling. The 10 provinces were each divided into strata according to whether they are Census Metropolitan Areas (CMAs) or not. Some of the CMAs were grouped together by extra rules and the non-CMAs were grouped to form 10 more strata, resulting in a total of 27 strata. Such sampling method is not the most ideal because the division of strata for the smaller CMAs and the non-CMAs is not as systematic as the others, when some unrelated areas were grouped together. As well, the method for data collection allows for inaccurate data if respondents choose to not provide true information through phone calls. 
+
+In the data set, there are in total 461 variables and 81 of them were selected for our study after cleaning, and 20602 observations were collected. This data set was chosen for our study because it is large and the most recent for our topic. A major drawback of this data set is that not all observations were useful when the survey provides irrelevant options to questions, such as "do not know" and "valid skip". Due to that, we have to clean the data to exclude useless observations, which would then decrease the size of our sample and lead to less accurate results. 
+
+
+## Model
+
+We used a multivariate linear regression model to measure the correlation between the total children of respondents and their age, number of household, marital status and degree of education. We use this model because we believe these variables would impact the number of children, and there is a linear relation between the variables.
+It can predict the linear relation of more than one independent variable and the dependent variable. In our model, the total number of children is considered the response(dependent) variable, which is numeric. Other variables are used as independent variables, more specifically, the age and size of household are numerical variables. Marriage status and educational level are dummy variables, which means the categorical variable in the regression model. We used R to run this model as learnt in the lectures.
+
+By using the linear model, we have predicted a formula.
+
+### (1) Formula of Our Model:
+total_children = ${\beta_0}$ + ${\beta_1}$age + ${\beta_2}$hh_size + ${\beta_3}$College, CEGEP or other non-university certificate or di... + ${\beta_4}$High school diploma or a high school equivalency certificate + ${\beta_5}$Less than high school diploma or its equivalent + ${\beta_6}$Trade certificate or diploma + ${\beta_7}$University certificate or diploma below the bachelor's level + ${\beta_8}$University certificate, diploma or degree above the bach... + ${\beta_9}$Living common-law + ${\beta_10}$Married + ${\beta_11}$Separated + ${\beta_12}$Single, never married + ${\beta_13}$Widowed
+
+```{r}
+```
+
+
+```{r}
+library(ggplot2)
+
+ms_plot <- gss_cleaned%>%
+  ggplot(aes(x=marital_status, y=total_children))+
+  geom_boxplot()
+ms_plot
+
+```
+## Results
+
+
+
+From the box plot of marital_status verses total_children, we can see that the medians of most marital status lie around 2 other than "living common-law" and "single,never married". Also, most "widowed" seem to have more children than other status while most "single, never married" have the least. Most of the respondents who are "Single, never married" have 0 children but there are still some of them with different number of children. 
+
+## Discussion
+
+Here you will discuss conclusions drawn from the results and comment on how it relates to the original goal of the study (which was specified in the Introduction).
+
+
+# Weaknesses
+
+Here we discuss weaknesses of the study, data, analysis, etc. You can also discuss areas for improvement.
+
+# Next Steps
+
+Here you discuss subsequent work to be done after this report. This can include next steps in terms of statistical analysis (perhaps there is a more efficient algorithm available, or perhaps there is a caveat in the data that would allow for some new technique). Future steps should also be specified in terms of the study setting (eg. including a follow-up survey on something, or a subsequent study that would complement the conclusions of your report).
+
+
+## References
+
+###Dataset (MLA)
+
+ Beaupre, Pascale. *General Social Survey Cycle 31: Families*, *2020*.
+  Statistics Canada Minister of Industry [distributor]. Web. April 2020. 
+
+###Software
+ RStudio Team (2020). RStudio: Integrated Development for R. RStudio, PBC,
+  Boston, MA URL http://www.rstudio.com/.
+
+###Packages
+ T. Lumley (2020) "survey: analysis of complex survey samples". R
+  package version 4.0.
+
+
