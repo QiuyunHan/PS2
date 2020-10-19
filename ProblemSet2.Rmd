@@ -3,15 +3,15 @@ title: "Analysis of Total Number of Children with Multivariate Linear Regression
 author: "Wing Yi Ma, Qiuyun Han, Tong Wu, Minhui Yu"
 date: "October 19th 2020"
 output:
-  html_document:
-    df_print: paged
   pdf_document:
     latex_engine: xelatex
+  html_document:
+    df_print: paged
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-# install.packages("rsq") #uncomment this if you have not installed it
+# install.packages("rsq") #uncomment this if you have not installed the package
 library(ggplot2)
 library(dplyr)
 library(rsq)
@@ -21,14 +21,7 @@ library(tidyverse)
 gss <- read_csv("gss.csv")
 ```
 
-## Title of your Report
-Analysis of Total Number of Children with Multivariate Linear Regression Model
 
-# Names of Authors 
-Wing Yi Ma, Qiuyun Han, Tong Wu, Minhui Yu
-
-# Date
-October 19th 2020
 
 ## Abstract
 
@@ -45,10 +38,10 @@ The data set used in this report is the 2017 General Social Survey (GSS) on Fami
 
 In the data set, there are in total 461 variables and 81 of them were selected for our study after cleaning, and 20602 observations were collected. This data set was chosen for our study because it is large and the most recent for our topic. A major drawback of this data set is that not all observations were useful when the survey provides irrelevant options to questions, such as "do not know" and "valid skip". Due to that, we have to clean the data to exclude useless observations, which would then decrease the size of our sample and lead to less accurate results. 
 
-Code and data support this report is available at https://github.com/QiuyunHan/PS2.
+**Code and data support this report is available at https://github.com/QiuyunHan/PS2**
 
 ```{r,echo=F, message=F}
-glimpse(gss)
+glimpse(gss) #raw data
 ```
 
 ## Model
