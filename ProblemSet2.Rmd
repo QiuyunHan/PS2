@@ -45,18 +45,40 @@ The data set used in this report is the 2017 General Social Survey (GSS) on Fami
 
 In the data set, there are in total 461 variables and 81 of them were selected for our study after cleaning, and 20602 observations were collected. This data set was chosen for our study because it is large and the most recent for our topic. A major drawback of this data set is that not all observations were useful when the survey provides irrelevant options to questions, such as "do not know" and "valid skip". Due to that, we have to clean the data to exclude useless observations, which would then decrease the size of our sample and lead to less accurate results. 
 
+Code and data support this report is available at https://github.com/QiuyunHan/PS2.
+
 
 ## Model
 
 We used a multivariate linear regression model to measure the correlation between the total children of respondents and their age, size of household, marital status and degree of education. We use this model because we believe these variables would impact the number of children, and there is a linear relation between the variables.
-It can predict the linear relation of more than one independent variable and the dependent variable. In our model, the total number of children is considered the response(dependent) variable, which is numeric. Other variables are used as independent variables, more specifically, the age and size of household are numerical variables. Marriage status and educational level are dummy variables, which means they are the categorical variables in the regression model. We used R to run this model as learnt in the lectures.
+A multivariate linear regression model can predict the linear relation of more than one independent variable and the dependent variable. In our model, the total number of children is considered the response(dependent) variable, which is numeric. Other variables are used as independent variables, more specifically, the age and size of household are numerical variables. Marriage status and educational level are dummy variables, which means they are the categorical variables in the regression model.
 There are reasons why we choose these variables. Firstly, we choose age rather than age group because age is a continuous numerical variable, it is more accurate than the age group. Same reason for choosing the household size. Besides, we believe the degree of educational level and his marital status would affect his decision on being a parent, thus it would impact the total number of children in the household.
+We used R to run this model as learnt in the lectures. Since this model was built based on a survey data and they have used stratified sampling during the survey, we used survey package and the stratified method to build the mode. However,  this survey has used different province as the stratum, we considered every province have the same weight in our model, and we were build this without the finite population correction.
+For the alternative model, we believe logistic regression model is also appropriate, but we need to turn the response variable as binary, for example if the respondent has more than 5 children or not, and we can use the same expasionary variable to predict the result.
+
+
+
+
 
 
 By using the linear model, we have predicted a formula.
 
 ### (1) Formula of Our Model:
 total_children = ${\beta_0}$ + ${\beta_1}$age + ${\beta_2}$hh_size + ${\beta_3}$College, CEGEP or other non-university certificate or di... + ${\beta_4}$High school diploma or a high school equivalency certificate + ${\beta_5}$Less than high school diploma or its equivalent + ${\beta_6}$Trade certificate or diploma + ${\beta_7}$University certificate or diploma below the bachelor's level + ${\beta_8}$University certificate, diploma or degree above the bach... + ${\beta_9}$Living common-law + ${\beta_10}$Married + ${\beta_11}$Separated + ${\beta_12}$Single, never married + ${\beta_13}$Widowed
+
+
+
+### (2) Interpretation of the Model:
+
+Total_children is our response variable, age,hh_size,education and marital status are expansionary variables.
++ ${\beta_0}$ : This is the intercept for our model
++ ${\beta_1}$ : This is the parameter for variable age
++ ${\beta_2}$ : This is the parameter for variable household size
++ ${\beta_3}$ to ${\beta_8}$: These are the parameter for variable education in different degrees.
++ ${\beta_9}$ to ${\beta_13}$: These are the parameter for variable marital_status represents different status of marriage of repondents.
+ 
+ 
+
 
 
 
@@ -282,7 +304,7 @@ From this pie chart we can conclude that married people accounted for the larges
 
 # Weaknesses
 
-Some limitations and drawbacks of the survey and the sampling method are as mentioned in the data section. As well, the sampled population includes people from different cities in Canada. The various environments in Canada might also be a factor on parents’ decisions with the number of children they would like to have. Therefore, our model might not have included all factors that possibly influence the total number of children in families. Another weakness of our model would be that linear regression models are sensitive to outliers, as we can see from the plots of each predictor variable versus total_children, the existence of outliers was obvious. This could have lowered the accuracy of our results. Finally, we did not use fpc in our model, which might have caused the standard errors of the estimates to be too big. 
+Some limitations and drawbacks of the survey and the sampling method are as mentioned in the data section. As well, the sampled population includes people from different pronvinces in Canada. The various environments in Canada might also be a factor on parents’ decisions with the number of children they would like to have. Therefore, our model might not have included all factors that possibly influence the total number of children in families. Another weakness of our model would be that linear regression models are sensitive to outliers, as we can see from the plots of each predictor variable versus total_children, the existence of outliers was obvious. This could have lowered the accuracy of our results. Finally, we did not use fpc in our model, which might have caused the standard errors of the estimates to be too big. 
 
 # Next Steps
 
@@ -317,7 +339,7 @@ Our model is a stratified sampling without finite population correction. So we c
 Yihui Xie (2020). knitr: A General-Purpose Package for Dynamic Report Generation in R. R package version 1.29.
 
 
-### Website
+### Websites
  Yihui Xie, Christophe Dervieux. “R Markdown Cookbook.” 10.1 The Function Knitr::Kable(), 21 Sept. 2020, bookdown.org/yihui/rmarkdown-cookbook/kable.html. 
  
  Telling Stories With Data, 17 May 2020, tellingstorieswithdata.com/. 
