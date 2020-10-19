@@ -1,18 +1,28 @@
 ---
 title: "Title of Your Report"
-author: "Wing Yi Ma," "Qiuyun Han"
+author: "Wing Yi Ma, Qiuyun Han, Tong Wu, Minghui Yu"
 date: "October 19th 2020"
-output: pdf_document
+output:
+  pdf_document: default
+  bookdown::pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
+#install.packages("rsq")
+library(ggplot2)
+library(dplyr)
+library(rsq)
+library(knitr)
+library(survey)
+library(tidyverse)
+gss <- read_csv("gss.csv")
 ```
 
 ## Title of your Report
 
 # Name(s) of Author(s) 
-Wing Yi Ma, Qiuyun Han
+Wing Yi Ma, Qiuyun Han, Tong Wu, Minhui Yu
 
 # Date
 October 19th 2020
@@ -27,6 +37,9 @@ The falling population is a common phenomenon in the developed countries, and it
 The goal of this report is to find how the factors will relate to the total number of children in Canadian households. We first get the GSS survey data of Canadian Family in 2017, then we made a clean of the data and the raw data after cleaning is called “gss”. We have made this clean because we want to remove the insignificant, invalid observations or variables that are not useful to our report, also we rename every variable in the new data so we can visualize the dataset. In the report, we made analysis on some variables that we believe important to see how they correlated with the total number of children in families, such as the age of respondent, the household size of the respondent, and we also investigate their marriage status and educational level. We have used a multivariate regression method to measure the relations, in our model, total children number is the response variable and the age, household size, marriage status and educational level are our expansionary variables. 
 
 ## Data
+```{r,echo=F, message=F}
+glimpse(gss)
+```
 
 The data set used in this report is the 2017 General Social Survey (GSS) on Family. The data was collected through telephone calls from February 2nd to November 30th 2017, with telephone numbers provided by Statistics Canada's Address Register, which is the sampling frame of this survey.The population of the survey is the entire Canadian population. Its target population was the non-institutionalized persons who were 15 years of age and older and lived in the 10 provinces of Canada, excluding residents of the Yukon, Northwest Territories, and Nunavut, and the full-time residents of institutions. The frame population was the owners of the telephone numbers that were called, and the sampled population was the ones who answered the survey question through the calls. The sampling method used was stratified random sampling. The 10 provinces were each divided into strata according to whether they are Census Metropolitan Areas (CMAs) or not. Some of the CMAs were grouped together by extra rules and the non-CMAs were grouped to form 10 more strata, resulting in a total of 27 strata. Such sampling method is not the most ideal because the division of strata for the smaller CMAs and the non-CMAs is not as systematic as the others, when some unrelated areas were grouped together. As well, the method for data collection allows for inaccurate data if respondents choose to not provide true information through phone calls. 
 
@@ -45,34 +58,23 @@ By using the linear model, we have predicted a formula.
 ### (1) Formula of Our Model:
 total_children = ${\beta_0}$ + ${\beta_1}$age + ${\beta_2}$hh_size + ${\beta_3}$College, CEGEP or other non-university certificate or di... + ${\beta_4}$High school diploma or a high school equivalency certificate + ${\beta_5}$Less than high school diploma or its equivalent + ${\beta_6}$Trade certificate or diploma + ${\beta_7}$University certificate or diploma below the bachelor's level + ${\beta_8}$University certificate, diploma or degree above the bach... + ${\beta_9}$Living common-law + ${\beta_10}$Married + ${\beta_11}$Separated + ${\beta_12}$Single, never married + ${\beta_13}$Widowed
 
-```{r}
-```
 
-box plot of marital_status verses total_children
-```{r}
-library(ggplot2)
 
-ms_plot <- gss_cleaned%>%
-  ggplot(aes(x=marital_status, y=total_children))+
-  geom_boxplot()
-ms_plot
-
-```
-boxplots of age by total number of children
-```{r, echo=false}
+## Results
+```{r, echo=FALSE,include = FALSE}
 #clean the data
-mycol<- gss %>% select(age, total_children, marital_status, education, hh_size) %>% na.omit()
+mycol<- gss %>% select(age, total_children, marital_status, education, hh_size,province) %>% na.omit()
 cleaned <- mycol %>% filter(education != "NA") %>% filter(marital_status != "NA")
 tibble(cleaned)
+```
 
-library(ggplot2)
+```{r, echo=FALSE}
 #create the graph: boxplot
 thebox <- ggplot(cleaned, aes(x= factor(total_children), y=age, fill=factor(total_children))) + geom_boxplot() + 
-  labs(title="Box plot", 
-       subtitle="boxplots of age by total number of children",
-       x="Total number of children",
-       y="Age of respondents",
-       fill = "Total number of children")+
+  labs(caption = "Figure 1 Boxplot of age of respondents grouped by number of total children", title="Boxplot of Respondent's Age by Total Number of Children", 
+       x="Total Number of Children",
+       y="Age of Respondents",
+       fill = "Total Number of Children")+
   theme_classic()
 #the graph
 thebox
@@ -81,43 +83,243 @@ thebox
 
 
 
-
-## Results
-
+From the box plot of age of respondents by each number of children(Figure 1), we can observe the distribution of age in each number of children. We can see that respondents without kid has lowest age median, which is around 35 years old. And the respondents who has seven or more children are around 75 years old. There is one outlier, a respondent who has 6 kids is approximately 30 years old, while most resondents' age has the median of 73 years old with 6 children.
 
 
-From the box plot of marital_status verses total_children, we can see that the medians of most marital status lie around 2 other than "living common-law" and "single,never married". Also, most "widowed" seem to have more children than other status while most "single, never married" have the least. Most of the respondents who are "Single, never married" have 0 children but there are still some of them with different number of children. 
 
 
-From the box plot of age of respondents by each number of children, we can observe the distribution of age in each number of children. We can see that respondents without kid has lowest age median, which is around 35 years old. And the respondents who has seven or more children are around 75 years old. There is one outlier, a respondent who has 6 kids is approximately 30 years old, while most resondents' age has the median of 73 years old with 6 children.
+
+```{r}
+ggplot(data=cleaned) + 
+    geom_boxplot( aes(x=factor(hh_size), y=total_children, fill=factor(hh_size)), position=position_dodge(1)) +
+    scale_x_discrete(breaks=c(1, 2, 3,4,5,6), labels=c("1", "2", "3","4","5","6")) + theme_bw() + 
+  labs(x="Household Size", y="Total Number of Children", title = "Boxplot of Respondent's Total Number of Children by Household Size", caption = "Figure 2 Boxplot on respondent's total number of children grouped by household size", fill = "Household Size")
+```
+
+
+Above is the boxplot of total number of children versus household size(Figure 2). We can see from the boxplot that small household size generally have smaller amount of children, but it does not vary much between groups. Household size of 5 and 6 have the same mean ammount of children around 3, and household size of 1 and 3 have the same amount of children around 1.
+
+
+
+```{r}
+boxplot <- ggplot(data = cleaned, aes(x = `education`, y = `total_children`)) +
+  geom_boxplot(aes(fill = `education`),
+                   outlier.colour="red", 
+                   outlier.shape=8, 
+                   outlier.size=4) + ## Create a boxplot with outliers.
+  theme(axis.text.x = element_blank()) + ## Adjust x labels.
+  stat_boxplot(geom = "errorbar",width=0.15) + ## Add max and min.
+  labs(x = "Education Type",
+       y = "Total Children",
+       fill = "Education Type",
+       title = "Boxplot for Total Children and Education",
+       caption = "Figure 3 Boxplot of total children") + ## Add labels for x axis and y axis, change the title of label--'Education Type' and add title.
+  theme(plot.title = element_text(hjust = 0.5)) + ## Center the title.
+  theme_bw() + ## Change the background to white.
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+boxplot
+```
+
+
+Figure 3 shows that for each type of education the lower quartile are all 0 except "Trade certificate or diploma", but the upper quartile are different which is 2 or 3. The median is 2. The lower bound are all 0 , and the upper bound are 5, 6, or 7. There are outliers in the first three types and the last two types and all the outliers are at the larger value parts. For a sample with a standard normal distribution, only a few points are outliers. The more outliers, the heavier the tail and the smaller the degree of freedom (i.e. the number of free changes). However, skewness indicates the degree of deviation. Since the outliers are concentrated on the side with larger values, the distribution is right-skewed. We can get a simple conclusion that the higher the education, the less the number of children, however, most family will choose two children.
+
+
+
+
+```{r}
+ms_plot <- cleaned%>%
+  ggplot(aes(x=marital_status, y=total_children)) +
+  geom_boxplot() + theme_bw() + labs(x = "Marital Status", y="Total Number of Children", caption = "Figure 4 Boxplot of respondent's total number of children grouped by marital status", title = "Boxplot of Respondent's Total Number of Children by Marital Status",fill = "Marital Status")
+ms_plot
+```
+
+From the box plot of marital_status verses total_children(Figure 4), we can see that the medians of most marital status lie around 2 other than "living common-law" and "single,never married". Also, most "widowed" seem to have more children than other status while most "single, never married" have the least. Most of the respondents who are "Single, never married" have 0 children but there are still some of them with different number of children.
+
+
+
+```{r,echo=F, message=F,include=F}
+mydesign<-svydesign(id=~1,strata=~province, data=cleaned)
+svystrat <- svyglm(total_children ~ age+hh_size+education+marital_status, mydesign, family="gaussian")
+```
+```{r}
+kable(summary(svystrat)$coefficients, caption = "Summary of Regression Model on Total Children", digits = 3)
+```
+
+
+**R Squared Computation**
+```{r}
+rsq(svystrat)
+```
+
+Above is the summary table of the multivariate regression model on respondent's total number of children, with four regressor: respondent's age, household size, education level and marital status. And the computed R squared value is 0.396.
+
+
+
 
 ## Discussion
 
-Here you will discuss conclusions drawn from the results and comment on how it relates to the original goal of the study (which was specified in the Introduction).
+### (1) Formula of Our Model:
+total_children = ${\beta_0}$ + ${\beta_1}$age + ${\beta_2}$hh_size + ${\beta_3}$College, CEGEP or other non-university certificate or di... + ${\beta_4}$High school diploma or a high school equivalency certificate + ${\beta_5}$Less than high school diploma or its equivalent + ${\beta_6}$Trade certificate or diploma + ${\beta_7}$University certificate or diploma below the bachelor's level + ${\beta_8}$University certificate, diploma or degree above the bach... + ${\beta_9}$Living common-law + ${\beta_10}$Married + ${\beta_11}$Separated + ${\beta_12}$Single, never married + ${\beta_13}$Widowed
+
+
+
++ In this formula, age and hh_size are numerical variables and others are dummy variables. And the estimate value, the standard error, the t-value and the p-value of each variable are shown as the table above.
+
++ For example, Living common-law = 1, if the marital status of the person being interviewed is Living common-law; Living common-law = 0, otherwise.
+
+
+### (2) Interpretation:
++ ${\beta_0}$ = -1.123: This is the intercept for our model which represent that when age = 0, hh_size = 0, education = "Bachelor's degree (e.g. B.A., B.Sc., LL.B.)" and marital_status = "Divorced", total_children = -1.123. However there is no real meaning here, because there will be no -1.123 children.
++ ${\beta_1}$ = 0.038: If age of the person being interviewed increases by one unit, then total_children increases by 0.038 units.
++ ${\beta_2}$ = 0.434: If hh_size of the person being interviewed increases by one unit, then total_children increases by 0.434 units.
++ ${\beta_3}$ ~ ${\beta_8}$: 
+  * These are all dummy variables for education.
+  * The baseline is "Bachelor's degree (e.g. B.A., B.Sc., LL.B.)".
+  * Since ${\beta_3}$ = 0.168, then the meaning of ${\beta_3}$ is if the education type change from "Bachelor's degree (e.g. B.A., B.Sc., LL.B.)" to "College, CEGEP or other non-university certificate or di...", total_children will increase by 0.168 with other conditions remain unchanged. The explanation of ${\beta_4}$ ~ ${\beta_8}$ is the same.
+  * Since ${\beta_4}$ - ${\beta_3}$ = 0.227 - 0.168 = 0.059, we can also say that if the education type change from "College, CEGEP or other non-university certificate or di..." to "High school diploma or a high school equivalency certificate", total_children will increase by 0.059 with other conditions remain unchanged. Same for ${\beta_3}$ ~ ${\beta_8}$
++ ${\beta_9}$ ~ ${\beta_13}$: 
+  *These are all dummy variables for marital status.
+  * The baseline is "Divorced".
+  * Since ${\beta_9}$ = -0.456, then the meaning of ${\beta_9}$ is if the marital status change from "Divorced" to "Living common-law", total_children will decrease by 0.456 with other conditions remain unchanged. The explanation of ${\beta_10}$ ~ ${\beta_13}$ is the same.
+  * Since ${\beta_10}$ - ${\beta_9}$ = -0.280 - (-0.456) = 0.176, we can also say that if the marital status change from "Living common-law" to "Married", total_children will increase by 0.176 with other conditions remain unchanged. Same for other combinations for ${\beta_9}$ ~ ${\beta_13}$.
+
+### (3) Evaluation for Our Model:
++ ${R^2}$ = 0.396: We can say that 39.6% variation in total_children can be explained by our model.
++ Pr(>|t|) - p-value: Since all variables' p-value is smaller than 0.05, then we can say that all variables are statistically significant.
+
+
+### (4) Conclusion:
+Our conclusion is that the larger the age, the larger the hh_size, the lower the education level, and the better the marital status, the greater the total number of children in Canadian families.
+This model can be used for reference by people of different ages, for example, for young couples, they will have the expected number of children about them.  In other words, through our model, people can find a reference value for the number of total children.
+Combined with our plots, we can see that the proportion of people with a high education level will be 50%, and single, never married will account for 23%, which will result in fewer children in Canadian families. If things go on like this, fewer children will lead to more serious social problems such as population aging and a decline in labor, so the government can encourage people to have more children.
+
+```{r, echo = FALSE, message = FALSE}
+tran1 <- cleaned%>%
+  group_by(`education`)%>%
+  summarise(count = n())
+kable(tran1,col.names = c("Education","Count"),caption = "Table for Respondents' Education")
+```
+
+```{r, echo = FALSE}
+# Create a frame of data above.
+df<- data.frame(
+  group = c("Bachelor's degree (e.g. B.A., B.Sc., LL.B.)", "College, CEGEP or other non-university certificate or di...", "High school diploma or a high school equivalency certificate", "Less than high school diploma or its equivalent", "Trade certificate or diploma", "University certificate or diploma below the bachelor's level", "University certificate, diploma or degree above the bach..."),
+  value = c(3752, 4563, 4843, 3033, 1483, 731, 1835)
+)
+
+# Sort the data in the data frame from large to small in column Value
+df = df[order(df$value, decreasing = TRUE),]
+
+# Convert to a vector, otherwise the label of the legend may be inconsistent with the actual order
+myLabel = as.vector(df$group)
+
+# Keep two decimal places for the result
+myLabel = paste(myLabel, "(", round(df$value / sum(df$value) * 100, 2), "%)", sep = "")   
+
+pie <- ggplot(df, aes(x = "", y = value, fill = group)) + ## Start with a bar chart.
+  geom_bar(width = 1, stat = "identity") + # Remove the noise in the center of the pie chart.
+  coord_polar("y", start = 0) + ## Fold the bar chart into a pie chart.
+  labs(x = "",
+       y = "",
+       title = "Pie Chart for Education Type",
+       caption = "Figure 5 pie chart of respondents' education") + ## Add title and caption and remove labels for x axis and y axis.
+  theme(axis.ticks = element_blank()) + ## Remove the extra horizontal line in the upper left corner.
+  theme(axis.text.x = element_blank()) + ## Remove the numbers on the white frame.
+  theme(legend.title = element_blank()) + ## Remove the title in the legend.
+  theme(text = element_text(size = 6)) + ## Adjust the size of labels.
+  scale_fill_discrete(breaks = df$group, labels = myLabel) ## Replace the original legend label with the current myLabel.
+pie
+
+```
+
+
+From this pie chart we can observe that if it is based on whether or not to complete college, the proportion of people with high education and low education is basically 50%.
+
+```{r, echo = FALSE, message = FALSE}
+tran_2<-cleaned%>%
+  group_by(`marital_status`)%>%
+  summarise(count = n())
+kable(tran_2,col.names = c("Marital Status", "Count"), caption = "Table for Respondents' Marital Status")
+```
+
+```{r, echo = FALSE}
+# Create a frame of data above.
+df<- data.frame(
+  group = c("Divorced", "Living common-law", "Married", "Separated", "Single, never married", "Widowed"),
+  value = c(1734, 2030, 9332, 629, 4647, 1868)
+)
+
+# Sort the data in the data frame from large to small in column Value
+df = df[order(df$value, decreasing = TRUE),]
+
+# Convert to a vector, otherwise the label of the legend may be inconsistent with the actual order
+myLabel = as.vector(df$group)
+
+# Keep two decimal places for the result
+myLabel = paste(myLabel, "(", round(df$value / sum(df$value) * 100, 2), "%)", sep = "")   
+
+pie <- ggplot(df, aes(x = "", y = value, fill = group)) + ## Start with a bar chart.
+  geom_bar(width = 1, stat = "identity") + # Remove the noise in the center of the pie chart.
+  coord_polar("y", start = 0) + ## Fold the bar chart into a pie chart.
+  labs(x = "",
+       y = "",
+       title = "Pie Chart for Marital Status",
+       caption = "Figure 6 Pie chart of respondents' marital status") + ## Add title and caption and remove labels for x axis and y axis.
+  theme(axis.ticks = element_blank()) + ## Remove the extra horizontal line in the upper left corner.
+  theme(axis.text.x = element_blank()) + ## Remove the numbers on the white frame.
+  theme(legend.title = element_blank()) + ## Remove the title in the legend.
+  theme(text = element_text(size = 6)) + ## Adjust the size of labels.
+  scale_fill_discrete(breaks = df$group, labels = myLabel) ## Replace the original legend label with the current myLabel.
+pie
+```
+
+
+From this pie chart we can conclude that married people accounted for the largest proportion, reaching 46%, followed by single, never married people, accounting for 23%, almost half of the number of married people.
+
+
 
 
 # Weaknesses
 
-Here we discuss weaknesses of the study, data, analysis, etc. You can also discuss areas for improvement.
+Some limitations and drawbacks of the survey and the sampling method are as mentioned in the data section. As well, the sampled population includes people from different cities in Canada. The various environments in Canada might also be a factor on parents’ decisions with the number of children they would like to have. Therefore, our model might not have included all factors that possibly influence the total number of children in families. Another weakness of our model would be that linear regression models are sensitive to outliers, as we can see from the plots of each predictor variable versus total_children, the existence of outliers was obvious. This could have lowered the accuracy of our results. Finally, we did not use fpc in our model, which might have caused the standard errors of the estimates to be too big. 
 
 # Next Steps
 
-Here you discuss subsequent work to be done after this report. This can include next steps in terms of statistical analysis (perhaps there is a more efficient algorithm available, or perhaps there is a caveat in the data that would allow for some new technique). Future steps should also be specified in terms of the study setting (eg. including a follow-up survey on something, or a subsequent study that would complement the conclusions of your report).
+Our model is a stratified sampling without finite population correction. So we can add this part to strengthen our model and make the model more reasonable. Since our model is only based on 2017, if we want to obtain more information on relationship of other variables or want to see if our conclusion of the model is correct, we need follow-up surveys in 2018 and after. And the more data we have the more accurate our model is. To make our model more convincing, we can investigate more people. Expanding the data range will make the results more accurate. 
 
 
 ## References
 
-###Dataset (MLA)
+
+### Dataset (MLA)
 
  Beaupre, Pascale. *General Social Survey Cycle 31: Families*, *2020*.
   Statistics Canada Minister of Industry [distributor]. Web. April 2020. 
 
-###Software
+### Software
  RStudio Team (2020). RStudio: Integrated Development for R. RStudio, PBC,
   Boston, MA URL http://www.rstudio.com/.
 
-###Packages
+### Packages
+ Dabao Zhang (2020). rsq: R-Squared and Related Measures. R package version 2.0. https://CRAN.R-project.org/package=rsq
+ 
+ Hadley Wickham, Romain François, Lionel Henry and Kirill Müller (2020). dplyr: A Grammar of Data Manipulation. R package version 1.0.2.
+  https://CRAN.R-project.org/package=dplyr
+  
+ H. Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York, 2016.
+
  T. Lumley (2020) "survey: analysis of complex survey samples". R
   package version 4.0.
+
+ Wickham et al., (2019). Welcome to the tidyverse. Journal of Open Source Software, 4(43), 1686, https://doi.org/10.21105/joss.01686
+
+Yihui Xie (2020). knitr: A General-Purpose Package for Dynamic Report Generation in R. R package version 1.29.
+
+
+### Website
+ Yihui Xie, Christophe Dervieux. “R Markdown Cookbook.” 10.1 The Function Knitr::Kable(), 21 Sept. 2020, bookdown.org/yihui/rmarkdown-cookbook/kable.html. 
+
 
 
