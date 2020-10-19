@@ -319,6 +319,7 @@ Yihui Xie (2020). knitr: A General-Purpose Package for Dynamic Report Generation
 
 ### Website
  Yihui Xie, Christophe Dervieux. “R Markdown Cookbook.” 10.1 The Function Knitr::Kable(), 21 Sept. 2020, bookdown.org/yihui/rmarkdown-cookbook/kable.html. 
-
+ 
+ Telling Stories With Data, 17 May 2020, tellingstorieswithdata.com/. 
 
 
