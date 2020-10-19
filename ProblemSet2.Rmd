@@ -9,7 +9,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-#install.packages("rsq")
+#install.packages("rsq") #uncomment this if you have not installed it
 library(ggplot2)
 library(dplyr)
 library(rsq)
@@ -21,7 +21,7 @@ gss <- read_csv("gss.csv")
 
 ## Title of your Report
 
-# Name(s) of Author(s) 
+# Names of Authors 
 Wing Yi Ma, Qiuyun Han, Tong Wu, Minhui Yu
 
 # Date
@@ -79,7 +79,6 @@ thebox <- ggplot(cleaned, aes(x= factor(total_children), y=age, fill=factor(tota
 #the graph
 thebox
 ```
-
 
 
 
