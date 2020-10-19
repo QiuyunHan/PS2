@@ -117,17 +117,31 @@ Here you discuss subsequent work to be done after this report. This can include 
   Boston, MA URL http://www.rstudio.com/.
 
 ###Packages
+###Dataset (MLA)
+
+ Beaupre, Pascale. *General Social Survey Cycle 31: Families*, *2020*.
+  Statistics Canada Minister of Industry [distributor]. Web. April 2020. 
+
+###Software
+ RStudio Team (2020). RStudio: Integrated Development for R. RStudio, PBC,
+  Boston, MA URL http://www.rstudio.com/.
+
+###Packages
+ 
+ Dabao Zhang (2020). rsq: R-Squared and Related Measures. R package version 2.0. https://CRAN.R-project.org/package=rsq
+ 
+ Hadley Wickham, Romain François, Lionel Henry and Kirill Müller (2020). dplyr: A Grammar of Data Manipulation. R package version 1.0.2.
+  https://CRAN.R-project.org/package=dplyr
+  
+ H. Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York, 2016.
+
  T. Lumley (2020) "survey: analysis of complex survey samples". R
   package version 4.0.
 
  Wickham et al., (2019). Welcome to the tidyverse. Journal of Open Source Software, 4(43), 1686, https://doi.org/10.21105/joss.01686
 
- Hadley Wickham, Romain François, Lionel Henry and Kirill Müller (2020). dplyr: A Grammar of Data Manipulation. R package version 1.0.2.
-  https://CRAN.R-project.org/package=dplyr
-  
- H. Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York, 2016.
- 
- Dabao Zhang (2020). rsq: R-Squared and Related Measures. R package version 2.0. https://CRAN.R-project.org/package=rsq
+ Yihui Xie (2020). knitr: A General-Purpose Package for Dynamic Report Generation in R. R package version 1.29.
+
 
 
 
